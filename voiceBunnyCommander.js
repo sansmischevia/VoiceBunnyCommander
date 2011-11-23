@@ -25,8 +25,14 @@ program
 var signingKey = program.signingKey || process.env.SIGNING_KEY;
 var clientId = program.clientId || process.env.CLIENT_ID;
 
+if (!signingKey || !clientId) {
+	console.log("Set the signingKey and clientId before continuing");
+	exit(1);
+}
+
 if (!vb.initialized()) {
   vb.init(signingKey, clientId);
+	console.log("Initalized voiceBunnyClient with clientId %s and signingKey %s".green, signingKey, clientId);
 }
 
 if (program.create) {
