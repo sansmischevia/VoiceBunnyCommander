@@ -18,8 +18,8 @@ program
   .option('-w, --get-projects', 'Get a list of projects')
   .option('-a, --approve-read', 'Approve a read by ID')
   .option('-z, --reject-read', 'Reject a read by read ID')
-  .option('-k, --signing-key', 'Signing Key')
-  .option('-j, --client-id', 'Client ID')
+  .option('-k, --signing-key <signingKey>', 'Signing Key')
+  .option('-j, --client-id <clientId>', 'Client ID')
   .parse(process.argv);
 
 var signingKey = program.signingKey || process.env.SIGNING_KEY;
