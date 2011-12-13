@@ -20,10 +20,12 @@ program
   .option('-z, --reject-read', 'Reject a read by read ID')
   .option('-k, --signing-key <signingKey>', 'Signing Key')
   .option('-j, --client-id <clientId>', 'Client ID')
+  .option('-u, --host-url <url>', 'Host Url')
   .parse(process.argv);
 
 var signingKey = program.signingKey || process.env.SIGNING_KEY;
 var clientId = program.clientId || process.env.CLIENT_ID;
+var hostUrl = program.hostUrl || process.env.HOST_URL;
 
 if (!signingKey || !clientId) {
 	console.log("Set the signingKey and clientId before continuing");
@@ -31,7 +33,7 @@ if (!signingKey || !clientId) {
 }
 
 if (!vb.initialized()) {
-  vb.init(signingKey, clientId);
+  vb.init(signingKey, clientId, hostUrl);
 	console.log("Initalized voiceBunnyClient with clientId %s and signingKey %s".green, signingKey, clientId);
 }
 
