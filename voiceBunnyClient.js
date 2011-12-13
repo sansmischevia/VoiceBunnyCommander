@@ -45,6 +45,8 @@ var VoiceBunny = module.exports = {
 	createProject: function(script, title, rewardAmount, rewardCurrency,
 		language, genderandage, lifetime, specialInstructions, callback) {
 
+		genderandage = genderandage || "YF";
+		
 		var postParams = {
 			script: script,
 			title: title,
@@ -53,6 +55,7 @@ var VoiceBunny = module.exports = {
 			language: language,
 			genderandage: genderandage,
 			lifetime: lifetime.toString(),
+			user: this.clientId,
 			specialinstructions: specialInstructions
 		};
     
@@ -85,18 +88,18 @@ var VoiceBunny = module.exports = {
 	},
   
 	approveRead: function(readId, callback) {
-		var u = "https://" + this.baseUrl + isProd + "/read/approve/" + readId + ".json";
-		this.execPut(u, callback);
+		var uri = '/reads/approve/' + readId + '.json';
+		this.execAuthRequest(uri, null, callback, "GET", 200);
 	},
   
 	rejectRead: function(readId, callback) {
-		var u = "https://" + this.baseUrl + isProd + "/reads/reject/" + readId + ".json";
-		this.execPut(u, callback);
+		var uri = '/reads/reject/' + readId + '.json';
+		this.execAuthRequest(uri, null, callback, "GET", 200);
 	},
   
-	expireProject: function(projId, callback) {
-		var uri = 'projects/expire/' + projId + '.json';
-		this.execAuthRequest(uri, null, callback, "PUT", 204);
+	forceDisposed: function(projId, callback) {
+		var uri = 'projects/forceDisposed/' + projId + '.json';
+		this.execAuthRequest(uri, null, callback, "GET", 200);
 	},
   
 	/*
