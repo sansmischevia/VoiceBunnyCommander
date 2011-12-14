@@ -50,13 +50,13 @@ var VoiceBunny = module.exports = {
 		var postParams = {
 			script: script,
 			title: title,
-			rewardamount: rewardAmount.toString(),
-			rewardcurrency: rewardCurrency,
+			rewardAmount: rewardAmount.toString(),
+			rewardCurrency: rewardCurrency,
 			language: language,
-			genderandage: genderandage,
+			genderAndAge: genderandage,
 			lifetime: lifetime.toString(),
 			user: this.clientId,
-			specialinstructions: specialInstructions
+			specialInstructions: specialInstructions
 		};
     
 		console.log('createProject postParams: ' + JSON.stringify(postParams));
