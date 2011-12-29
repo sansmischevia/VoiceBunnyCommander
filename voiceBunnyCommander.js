@@ -41,13 +41,11 @@ if (program.create) {
 	program.prompt('title: ', function(title) {
 		program.prompt('script: ', function(script) {
 			program.prompt('reward: ', Number, function(reward) {
-				program.prompt('genderandage: ', function(genderandage) {
-					vb.createProject(script, title, reward, "US", "EN-us","YM", "3600000", "special instrucitons", 
-						function(data) {
-							console.log(data);
-							exit();
-						});
-				});
+				vb.createProject(script, title, reward, "US", "EN-us","YM", "3600000", "special instrucitons", 
+					function(data) {
+						console.log(data);
+						exit();
+					});
 			});
 		});
 	});
