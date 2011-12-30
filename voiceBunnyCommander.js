@@ -41,7 +41,7 @@ if (program.create) {
 	program.prompt('title: ', function(title) {
 		program.prompt('script: ', function(script) {
 			program.prompt('reward: ', Number, function(reward) {
-				vb.createProject(script, title, reward, "US", "EN-us","YM", "3600000", "special instrucitons", 
+				vb.createProject(script, title, reward, "USD", "EN-us","YM", "3600000", "special instrucitons", 
 					function(data) {
 						console.log(data);
 						exit();
