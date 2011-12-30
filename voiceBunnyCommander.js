@@ -18,34 +18,39 @@ program
 	.option('-w, --get-projects', 'Get a list of projects')
 	.option('-a, --approve-read', 'Approve a read by ID')
 	.option('-z, --reject-read', 'Reject a read by read ID')
-	.option('-k, --signing-key', 'Signing Key')
-	.option('-j, --client-id', 'Client ID')
+	.option('-k, --signing-key <signingKey>', 'Signing Key')
+	.option('-j, --client-id <clientId>', 'Client ID')
+	.option('-u, --host-url <hostUrl>', 'Host Url')
 	.parse(process.argv);
 
 var signingKey = program.signingKey || process.env.SIGNING_KEY;
 var clientId = program.clientId || process.env.CLIENT_ID;
+var hostUrl = program.hostUrl || process.env.HOST_URL;
+
+console.log(program.signingKey);
 
 if (!vb.initialized()) {
-	vb.init(signingKey, clientId);
+	vb.init(signingKey, clientId, hostUrl);
+	console.log("Initalized voiceBunnyClient with clientId %s and signingKey %s".green, signingKey, clientId);
 }
 
 if (program.create) {
 	program.prompt('title: ', function(title) {
 		program.prompt('script: ', function(script) {
 			program.prompt('reward: ', Number, function(reward) {
-				vb.createProject(script, title, reward, "US", "EN-us","YF", "3600000", "special instrucitons", 
+				vb.createProject(script, title, reward, "USD", "en-us","YF", "3600000", "special instructions", 
 					function(data) {
 						console.log(data);
 						exit();
 					});
-				});
 			});
 		});
+	});
 }
 
 if (program.expire) {
 	program.prompt('project id: ', Number, function(id) {
-		vb.expireProject(id, function(data) {
+		vb.forceDispose(id, function(data) {
 			console.log(data);
 			exit();
 		});
