@@ -6,8 +6,7 @@ var sys = require('sys'),
   http  = require('http'),
   request = require('request'),
   crypto  = require('crypto'), 
-  querystring = require('querystring'),
-  base64  = require('./base64');
+  querystring = require('querystring');
   
 var VoiceBunny = module.exports = {
   signingKey: false,
@@ -42,6 +41,9 @@ var VoiceBunny = module.exports = {
   createProject: function(script, title, rewardAmount, rewardCurrency,
     language, voicetype, lifetime, specialInstructions, callback) {
 
+    if (!rewardAmount) {
+      rewardAmount = 10;
+    }
     var postParams = {
       script: script,
       title: title,
@@ -120,12 +122,20 @@ var VoiceBunny = module.exports = {
       res.on('data', function(data) {
         console.log('request finished');
         if (res.statusCode == expectedResponse) {
-          callback(data);
+          if (callback) {
+            callback(data);            
+          }
         }
         else {
           console.log('failed to execute ' + method + ': ' + res.statusCode + '. Expecting: ' + expectedResponse);
           var errMsg = data || '';
-          callback(data, Error("Failed to execute " + method + ": " + res.statusCode + " error: " + errMsg));
+          var e = new Error("Failed to execute " + method + ": " + res.statusCode + " error: " + errMsg + ". Check http://voicebunny.com/doc.html status code definitions");
+          if (callback) {
+            callback(data, e);            
+          }
+          else {
+            throw e;
+          }
         }
       });
     });
