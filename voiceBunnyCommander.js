@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var program = require('commander');
-var vb = require('./voiceBunnyClient');
+var vb = require('./lib/voiceBunnyClient');
 var color = require('colors');
 
 program
