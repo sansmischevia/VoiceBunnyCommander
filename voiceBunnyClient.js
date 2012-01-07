@@ -43,13 +43,17 @@ var VoiceBunny = module.exports = {
 	},
 
 	createProject: function(script, title, rewardAmount, rewardCurrency,
-		language, genderandage, lifetime, specialInstructions, callback) {
+		language, genderandage, lifetime, specialInstructions, ping, callback) {
 
 		if (!rewardAmount) {
 		  rewardAmount = 10;
 		}
+		
+		if(!ping){
+			ping = '';
+		}
 
-		genderandage = genderandage || "YF";
+		genderandage = genderandage || "middleAgeMale";
 		
 		var postParams = {
 			script: script,
@@ -60,7 +64,8 @@ var VoiceBunny = module.exports = {
 			genderAndAge: genderandage,
 			lifetime: lifetime.toString(),
 			user: this.clientId,
-			specialInstructions: specialInstructions
+			specialInstructions: specialInstructions,
+			ping: ping
 		};
     
 		console.log('createProject postParams: ' + JSON.stringify(postParams));
@@ -86,9 +91,16 @@ var VoiceBunny = module.exports = {
 		this.execRequest(u, callback);
 	},
   
-	getProjects: function(callback) {
-		var u = "https://" + this.baseUrl + isProd + "/projects.json";
-		this.execRequest(u, callback);
+	getProjects: function(status, page, itemsPerPage, callback) {
+		var uri = "/projects.json";
+		var postParams = {
+			status: status,
+			page: page,
+			itemsPerPage: itemsPerPage
+		};				
+		console.log('quote postParams: ' + JSON.stringify(postParams));
+		
+		this.execAuthRequest(uri, postParams, callback, "POST", 201);		
 	},
   
 	approveRead: function(readId, callback) {
@@ -105,7 +117,25 @@ var VoiceBunny = module.exports = {
 		var uri = 'projects/forceDispose/' + projId + '.json';
 		this.execAuthRequest(uri, null, callback, "GET", 200);
 	},
-  
+	
+	quote: function(script, callback) {
+		// Retrieves the project from voice bunny
+		var uri = "/projects/quote.json";
+		
+		var postParams = {
+			script: script
+		};		
+		
+		console.log('quote postParams: ' + JSON.stringify(postParams));
+		//postParams = this.addAuthParams(uri, postParams);
+		this.execAuthRequest(uri, postParams, callback, "POST", 201);
+	},	
+
+	balance: function(callback) {
+		var uri = "/balance.json";
+		this.execAuthRequest(uri, null, callback, "POST", 201);		
+	},
+
 	/*
    * Private methods
    */
@@ -131,7 +161,8 @@ var VoiceBunny = module.exports = {
 		var req = https.request(options, function(res) {
 			res.setEncoding('utf8');
 			res.on('data', function(data) {
-				console.log('request finished');
+				console.log('request finished. ' + res.statusCode);
+//				console.log(data);
 				if (res.statusCode == expectedResponse) {
 					if (callback) {
 						callback(data);            
