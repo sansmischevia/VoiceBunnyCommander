@@ -38,8 +38,13 @@ if (program.create) {
       program.prompt('rewardAmount: ', Number, function(rewardAmount) {
         program.prompt('ping: ', function(ping) {
           vb.createProject(script, title, rewardAmount, "usd", "en-us","middleAgeMale", "3600000", "special instructions", ping,
-            function(data) {
-              console.log(data);
+            function(data, err) {
+              if (err) {
+                console.log('Error with request: ' + err.toString());
+              }
+              else {
+                console.log(data);
+              }
               exit();
             });
         });
