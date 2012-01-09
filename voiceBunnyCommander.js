@@ -16,10 +16,13 @@ program
   .option('-l, --get-reads', 'Get Reads for project')
   .option('-d, --get-read-details', 'Get read details for read id')
   .option('-w, --get-projects', 'Get a list of projects')
+  .option('-q, --quote', 'Quote Project')
+  .option('-b, --balance', 'Check Balance')
   .option('-a, --approve-read', 'Approve a read by ID')
   .option('-z, --reject-read', 'Reject a read by read ID')
-  .option('-k, --signing-key', 'Signing Key')
-  .option('-j, --client-id', 'Client ID')
+  .option('-k, --signing-key <signingKey>', 'Signing Key')
+  .option('-j, --client-id <clientId>', 'Client ID')
+  .option('-u, --host-url <hostUrl>', 'Host Url')
   .parse(process.argv);
 
 var signingKey = program.signingKey || process.env.SIGNING_KEY;
@@ -32,16 +35,37 @@ if (!vb.initialized()) {
 if (program.create) {
   program.prompt('title: ', function(title) {
     program.prompt('script: ', function(script) {
-      program.prompt('reward: ', Number, function(reward) {
-        vb.createProject(script, title, reward, "US", "EN-us","YF", "3600000", "special instrucitons", 
-          function(data) {
-            console.log(data);
-            exit();
-          });
+      program.prompt('rewardAmount: ', Number, function(rewardAmount) {
+        program.prompt('ping: ', function(ping) {
+          vb.createProject(script, title, rewardAmount, "usd", "en-us","middleAgeMale", "3600000", "special instructions", ping,
+            function(data) {
+              console.log(data);
+              exit();
+            });
         });
       });
     });
+  });
 }
+
+if (program.quote) {
+  program.prompt('script: ', function(script) {
+    vb.quote(script,
+      function(data) {
+        console.log(data);
+        exit();
+      });
+  });
+}
+
+if (program.balance) {
+  vb.balance(
+    function(data) {
+      console.log(data);
+      exit();
+    });
+}
+
 
 if (program.expire) {
   program.prompt('project id: ', Number, function(id) {
@@ -71,11 +95,18 @@ if (program.getReads) {
 }
 
 if (program.getProjects) {
-  vb.getProjects(function(data) {
-    var res = JSON.parse(data);
-    console.log('Number of projects: ' + res.projects.length);
-    console.log(JSON.stringify(res.projects));
-    exit();
+  program.prompt('status: ', function(status) {
+    program.prompt('page: ', Number, function(page) {
+      program.prompt('itemsPerPage: ', Number, function(itemsPerPage) {
+        vb.getProjects(status, page, itemsPerPage, function(data) {
+          console.log(data);
+          var res = JSON.parse(data);
+          console.log('Number of projects: ' + res.projects.length);
+          console.log(JSON.stringify(res.projects));
+          exit();
+        });
+      });
+    });
   });
 }
 
