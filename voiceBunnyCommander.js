@@ -7,7 +7,7 @@ var color = require('colors');
 program
   .version('0.0.1')
   .option('-c, --create', 'Create Project')
-  .option('-x, --expire', 'Expire Project')
+  .option('-x, --dispose', 'Dispose Project')
   .option('-t, --title [title]', 'Title of project [tit]', 'AngryBirds 15s')
   .option('-s, --script [script]', 'Script [scp]', 'Test Script')
   .option('-r, --reward [reward]', 'Reward [rew]', '15')
@@ -29,49 +29,48 @@ if (!vb.initialized()) {
   vb.init(signingKey, clientId);
 }
 
+function handleResponse(err, data) {
+  if (err) {
+    console.log('There was an error with your request:');
+    console.log(err.message);
+    exit();
+  }
+}
+
 if (program.create) {
   program.prompt('title: ', function(title) {
     program.prompt('script: ', function(script) {
       program.prompt('reward: ', Number, function(reward) {
-        vb.createProject(script, title, reward, "US", "EN-us","YF", "3600000", "special instrucitons", 
-          function(data) {
-            console.log(data);
-            exit();
-          });
-        });
+        vb.createProject(script, title, reward, "US", "EN-us","YF", "3600000", "special instrucitons", handleResponse);
       });
     });
+  });
 }
 
-if (program.expire) {
+if (program.dispose) {
   program.prompt('project id: ', Number, function(id) {
-    vb.expireProject(id, function(data) {
-      console.log(data);
-      exit();
-    });
+    vb.forceDispose(id, handleResponse);
   });
 }
 
 if (program.get) {
   program.prompt('project id: ', Number, function(id) {
-    vb.getProject(id, function(data) {
-      console.log(data);
-      exit();
-    });
+    vb.getProject(id, handleResponse);
   });
 }
 
 if (program.getReads) {
   program.prompt('project id: ', Number, function(id) {
-    vb.getReadsForProject(id, function(data) {
-      console.log(data);
-      exit();
-    });
+    vb.getReadsForProject(id, handleResponse);
   });
 }
 
 if (program.getProjects) {
-  vb.getProjects(function(data) {
+  vb.getProjects(function(err, data) {
+    if (err) {
+      console.log('Error: ' + err.message);
+      exit(1);
+    }
     var res = JSON.parse(data);
     console.log('Number of projects: ' + res.projects.length);
     console.log(JSON.stringify(res.projects));
@@ -81,33 +80,25 @@ if (program.getProjects) {
 
 if (program.approveRead) {
   program.prompt('read id: ', Number, function(id) {
-    vb.approveRead(id, function(data) {
-      console.log(data);
-      exit();
-    });
+    vb.approveRead(id, handleResponse);
   });
 }
 
 if (program.rejectRead) {
   program.prompt('read id: ', Number, function(id) {
-    vb.rejectRead(id, function(data) {
-      console.log(data);
-      exit();
-    });
+    vb.rejectRead(id, handleResponse);
   });
 }
 
 if (program.getReadDetails) {
   program.prompt('read id: ', Number, function(id) {
-    vb.getReadDetails(id, function(data) {
-      console.log(data);
-      exit();
-    });
+    vb.getReadDetails(id, handleResponse);
   });
 }
 
 // static methods
-function exit() {
+function exit(code) {
+  code = code || 0;
   console.warn('exiting...'.yellow);
   process.exit();
 }
