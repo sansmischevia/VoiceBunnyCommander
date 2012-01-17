@@ -55,7 +55,7 @@ if (program.create) {
 if (program.quote) {
   program.prompt('script: ', function(script) {
     vb.quote(script,
-      function(data) {
+      function(err, data) {
         console.log(data);
         exit();
       });
@@ -64,7 +64,7 @@ if (program.quote) {
 
 if (program.balance) {
   vb.balance(
-    function(data) {
+    function(err, data) {
       console.log(data);
       exit();
     });
@@ -93,7 +93,7 @@ if (program.getProjects) {
   program.prompt('status: ', function(status) {
     program.prompt('page: ', Number, function(page) {
       program.prompt('itemsPerPage: ', Number, function(itemsPerPage) {
-        vb.getProjects(status, page, itemsPerPage, function(data) {
+        vb.getProjects(status, page, itemsPerPage, function(err, data) {
           console.log(data);
           var res = JSON.parse(data);
           console.log('Number of projects: ' + res.projects.length);
