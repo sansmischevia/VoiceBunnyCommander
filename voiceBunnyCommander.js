@@ -59,11 +59,15 @@ if (program.create) {
 
 if (program.quote) {
 	program.prompt('script: ', function(script) {
-		vb.quote(script,
-			function(err, data) {
-				console.log(data);
-				exit();
+		program.prompt('maxContestEntries: ', function(maxContestEntries) {
+			program.prompt('contest: ', function(contest) {
+				vb.quote(script, maxContestEntries, contest,
+					function(err, data) {
+						console.log(data);
+						exit();
+					});
 			});
+		});
 	});
 }
 
