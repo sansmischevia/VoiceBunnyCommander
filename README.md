@@ -15,3 +15,5 @@ Before using, set the SIGNING_KEY environment variable and the CLIENT_ID environ
 Type ./voiceBunnyCommander.js -h for usage help. Thanks commander.js for making this so easy!
 
 _-by sansMischevia_
+
+[![endorse](http://api.coderwall.com/brryant/endorsecount.png)](http://coderwall.com/brryant)
