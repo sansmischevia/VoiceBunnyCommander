@@ -51,7 +51,7 @@ if (program.create) {
             program.prompt('rewardAmount: ', Number, function(rewardAmount) {
                 program.prompt('ping: ', function(ping) {
                     program.prompt('test: ', function(test) {
-                        vb.createProject(script, title, rewardAmount, "usd", "eng-us","middleAgeMale", "3600000", "special instructions", ping, test, handleResponse);
+                        vb.createProject(script, title, rewardAmount, "usd", "urd-pk","middleAgeMale", "360000", "special instructions for test project", ping, test, handleResponse);
                     });
                 });
             });
